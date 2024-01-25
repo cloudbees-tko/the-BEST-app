@@ -12,7 +12,7 @@ public class HelloApplication {
 
   @RequestMapping("/")
   public String home() {
-    return "Hello quickstart-java-app!";
+    return "Yo mama!";
   }
 
   @RequestMapping("/{message}")
