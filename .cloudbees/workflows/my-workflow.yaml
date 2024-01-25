@@ -16,3 +16,5 @@ jobs:
         run: |
           echo "Hello world!"
           echo "Ciao a tutti!"
+          echo "¿Que tal?"
+          echo "你妹妹很有魅力"
