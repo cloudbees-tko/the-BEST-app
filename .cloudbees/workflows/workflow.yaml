@@ -1,0 +1,43 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: Workflow
+
+on:
+  push:
+    branches:
+      - '**'
+
+env:
+  APP_NAME: java-app
+  UNIQUE_PREFIX: sw
+
+jobs:
+  build-and-publish:
+    steps:
+      - name: Checkout
+        uses: cloudbees-io/checkout@v1
+
+      - name: Build JAR
+        uses: docker://maven:3.9.6-eclipse-temurin-17
+        shell: sh
+        run: |
+          mvn clean install
+
+      - name: Login to AWS
+        uses: cloudbees-io/configure-aws-credentials@v1
+        id: aws-login
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ vars.aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          role-to-assume: cloudbees-infra-mgmt
+          role-duration-seconds: "3600" # need to override default of 6h as our role has 1h max.
+
+      - name: Configure container registry 
+        uses: cloudbees-io/configure-ecr-credentials@v1
+
+      - name: Build and publish container image
+        id: image-publish
+        uses: cloudbees-io/kaniko@v1
+        with:
+          destination: ${{ steps.aws-login.outputs.aws-account-id }}.dkr.ecr.us-east-1.amazonaws.com/${{ env.APP_NAME }}-image:${{ env.UNIQUE_PREFIX }}-${{ cloudbees.version }}
