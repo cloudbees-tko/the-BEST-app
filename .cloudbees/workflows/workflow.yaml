@@ -9,7 +9,7 @@ on:
 
 env:
   APP_NAME: java-app
-  UNIQUE_PREFIX: sw
+  UNIQUE_PREFIX: bgarrett
 
 jobs:
   build-and-publish:
