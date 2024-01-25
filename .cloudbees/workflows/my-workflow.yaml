@@ -18,3 +18,10 @@ jobs:
       - uses: docker://maven:3.9.6-eclipse-temurin-17
         name: Build JAR
         run: mvn clean install
+      - uses: cloudbees-io/configure-aws-credentials@v1
+        name: AWS login
+        with:
+          aws-region: us-east-1
+          role-to-assume: cloudbees-infra-mgmt
+          aws-secret-access-key: aws_secret_access_key
+          aws-access-key-id: aws_access_key_id
