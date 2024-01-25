@@ -1,0 +1,38 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: Workflow
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    steps:
+      - name: Checkout
+        uses: cloudbees-io/checkout@v1
+
+      - name: Build JAR
+        uses: docker://maven:3.9.6-eclipse-temurin-17
+        shell: sh
+        run: |
+          mvn clean install
+
+      - name: Login to AWS
+        uses: cloudbees-io/configure-aws-credentials@v1
+        id: aws-login
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ vars.aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          role-to-assume: cloudbees-infra-mgmt
+          role-duration-seconds: "3600" # need to override default of 6h as our role has 1h max.
+
+      - name: AWS CLI testing
+        uses: docker://public.ecr.aws/aws-cli/aws-cli
+        shell: bash
+        run: |
+          set -x
+          aws sts get-caller-identity
+          aws s3 ls
