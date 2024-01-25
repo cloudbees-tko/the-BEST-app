@@ -29,3 +29,5 @@ jobs:
       - uses: docker://public.ecr.aws/aws-cli/aws-cli
         name: AWS sts cmd
         run: aws sts get-caller-identity
+      - uses: cloudbees-io/configure-ecr-credentials@v1
+        name: ECR authentication
