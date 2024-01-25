@@ -34,10 +34,21 @@ jobs:
         name: ECR authentication
       - uses: cloudbees-io/kaniko@v1
         name: Build container with kaniko
+        id: image-publish
         with:
           destination: ${{ steps.aws-login.outputs.aws-account-id
             }}.dkr.ecr.us-east-1.amazonaws.com/${{ env.APP_NAME }}-image:${{
             env.UNIQUE_PREFIX }}-${{ cloudbees.version }}
+      - uses: cloudbees-io/helm-package@v1
+        name: Package Helm chart
+        with:
+          chart: ./charts/myapp
+          destination: ./packaged-charts
+          version: 0.0.1
+          values:  |
+            image:
+              repository:  ${{ steps.aws-login.outputs.aws-account-id }}.dkr.ecr.us-east-1.amazonaws.com/${{ env.APP_NAME }}-image
+              tag: ${{ steps.image-publish.outputs.tag }}
 env:
   APP_NAME: java-app
   UNIQUE_PREFIX: bg
