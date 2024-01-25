@@ -8,7 +8,7 @@ on:
 env:
   APP_NAME: java-app
   UNIQUE_PREFIX: bgarrett
-  HOSTNAME: hugh-jass.aws.com
+  HOSTNAME: bgarrett.arch.beescloud.com
 jobs:
   build-and-publish:
     steps:
@@ -61,7 +61,6 @@ jobs:
   deploy:
     needs:
       - build-and-publish
-
     steps:
       - uses: cloudbees-io/configure-aws-credentials@v1
         with:
@@ -69,14 +68,11 @@ jobs:
           aws-access-key-id: ${{ vars.aws_access_key_id }}
           aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
           role-to-assume: cloudbees-infra-mgmt
-          role-duration-seconds: "3600" # need to override default of 6h as our role has 1h max
-
+          role-duration-seconds: "3600"
       - uses: cloudbees-io/configure-eks-credentials@v1
         with:
           name: cloudbees-quickstart-cluster
-
       - uses: cloudbees-io/configure-ecr-credentials@v1
-
       - id: install-chart
         name: Install helm chart
         uses: cloudbees-io/helm-install@v1
