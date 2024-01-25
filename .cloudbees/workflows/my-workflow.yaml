@@ -26,3 +26,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
           aws-access-key-id: ${{ vars.aws_access_key_id }}
           role-duration-seconds: "3600"
+      - uses: docker://public.ecr.aws/aws-cli/aws-cli
+        name: AWS sts cmd
+        run: aws sts get-caller-identity
