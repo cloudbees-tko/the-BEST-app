@@ -1,25 +1,21 @@
 apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
 name: My workflow
-
 on:
   push:
     branches:
-      - '**'
-
+      - "**"
 jobs:
   build:
     steps:
-      - name: Say hello
-        uses: docker://golang:1.20.3-alpine3.17
+      - uses: docker://golang:1.20.3-alpine3.17
+        name: Say hello
         shell: sh
         run: |
-          echo "Hello world!"
-          echo "Ciao a tutti!"
-          echo "¿Que tal?"
           echo "你妹妹很有魅力"
-      - name: List files
-        uses: docker://golang:1.20.3-alpine3.17
+      - uses: cloudbees-io/checkout@v1
+        name: Checkout
+      - uses: docker://maven:3.9.6-eclipse-temurin-17
+        name: Build JAR
+        run: mvn clean install
         shell: sh
-        run: |
-          ls
