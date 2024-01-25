@@ -18,3 +18,8 @@ jobs:
           echo "Ciao a tutti!"
           echo "¿Que tal?"
           echo "你妹妹很有魅力"
+      - name: List files
+        uses: docker://golang:1.20.3-alpine3.17
+        shell: sh
+        run: |
+          ls
