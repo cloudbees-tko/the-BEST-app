@@ -31,3 +31,9 @@ jobs:
         run: aws sts get-caller-identity
       - uses: cloudbees-io/configure-ecr-credentials@v1
         name: ECR authentication
+      - uses: cloudbees-io/kaniko@v1
+        name: Build container with kaniko
+        with:
+          destination: ${{ steps.aws-login.outputs.aws-account-id
+            }}.dkr.ecr.us-east-1.amazonaws.com/${{ env.APP_NAME }}-image:${{
+            env.UNIQUE_PREFIX }}-${{ cloudbees.version }}
