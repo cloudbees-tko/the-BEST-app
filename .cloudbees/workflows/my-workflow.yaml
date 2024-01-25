@@ -20,6 +20,7 @@ jobs:
         run: mvn clean install
       - uses: cloudbees-io/configure-aws-credentials@v1
         name: AWS login
+        id: aws-login
         with:
           aws-region: us-east-1
           role-to-assume: cloudbees-infra-mgmt
