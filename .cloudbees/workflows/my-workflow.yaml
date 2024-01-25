@@ -18,4 +18,3 @@ jobs:
       - uses: docker://maven:3.9.6-eclipse-temurin-17
         name: Build JAR
         run: mvn clean install
-        shell: sh
