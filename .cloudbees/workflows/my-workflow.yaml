@@ -23,6 +23,6 @@ jobs:
         with:
           aws-region: us-east-1
           role-to-assume: cloudbees-infra-mgmt
-          aws-secret-access-key: ${{ aws_secret_access_key }}
-          aws-access-key-id: ${{ aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          aws-access-key-id: ${{ vars.aws_access_key_id }}
           role-duration-seconds: "3600"
