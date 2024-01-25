@@ -38,3 +38,6 @@ jobs:
           destination: ${{ steps.aws-login.outputs.aws-account-id
             }}.dkr.ecr.us-east-1.amazonaws.com/${{ env.APP_NAME }}-image:${{
             env.UNIQUE_PREFIX }}-${{ cloudbees.version }}
+env:
+  APP_NAME: java-app
+  UNIQUE_PREFIX: bg
