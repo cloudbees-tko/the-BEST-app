@@ -12,12 +12,12 @@ public class HelloApplication {
 
   @RequestMapping("/")
   public String home() {
-    return "Hello quickstart-java-app!";
+    return "Yo mama, yo papa, yo greasy greasy granny!";
   }
 
   @RequestMapping("/{message}")
   public String subpath(@PathVariable String message) {
-    return "Hello quickstart-java-app: " + message + "!";
+    return "Yo mama, yo papa, yo greasy greasy granny! " + message + "!";
   }
 
   public static void main(String[] args) {
