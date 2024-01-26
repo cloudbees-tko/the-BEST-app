@@ -9,7 +9,6 @@ on:
 
 env:
   APP_NAME: java-app
-  HOSTNAME: sw-java-app.arch.beescloud.com
   UNIQUE_PREFIX: bgarrett
 
 jobs:
@@ -61,6 +60,7 @@ jobs:
       chart-version: ${{ steps.helm-publish.outputs.version }}
 
   deploy:
+    environment: dev
     needs:
       - build-and-publish
 
@@ -84,9 +84,9 @@ jobs:
           values: |
             ingress:
               annotations:
-                external-dns.alpha.kubernetes.io/hostname: ${{ env.HOSTNAME }}
+                external-dns.alpha.kubernetes.io/hostname: ${{ vars.HOSTNAME }}
               hosts:
-                - host: "${{ env.HOSTNAME }}"
+                - host: "${{ vars.HOSTNAME }}"
                   paths:
                     - path: /
                       pathType: Prefix
