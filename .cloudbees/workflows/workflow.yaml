@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout
         uses: cloudbees-io/checkout@v1
-        
+
       - name: Build JAR
         uses: docker://maven:3.9.6-eclipse-temurin-17
         shell: sh
@@ -24,8 +24,14 @@ jobs:
           mvn clean install
 
       - name: Login to AWS
-        uses: tko-prep-configure-aws-credentials
+        uses: cloudbees-io/configure-aws-credentials@v1
         id: aws-login
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ vars.aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          role-to-assume: cloudbees-infra-mgmt
+          role-duration-seconds: "3600" # need to override default of 6h as our role has 1h max.
 
       - name: Configure container registry 
         uses: cloudbees-io/configure-ecr-credentials@v1
@@ -65,7 +71,13 @@ jobs:
       - build-and-publish
 
     steps:
-      - uses: tko-prep-configure-aws-credentials
+      - uses: cloudbees-io/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ vars.aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          role-to-assume: cloudbees-infra-mgmt
+          role-duration-seconds: "3600" # need to override default of 6h as our role has 1h max
 
       - uses: cloudbees-io/configure-eks-credentials@v1
         with:
@@ -86,7 +98,7 @@ jobs:
               annotations:
                 external-dns.alpha.kubernetes.io/hostname: ${{ vars.HOSTNAME }}
               hosts:
-                - host: "${{ vars.HOSTNAME }}"
+                - host: ${{ vars.HOSTNAME }}
                   paths:
                     - path: /
                       pathType: Prefix
